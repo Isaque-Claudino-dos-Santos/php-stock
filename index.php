@@ -6,10 +6,20 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/helpers.php';
 require_once __DIR__ . '/autoload.php';
 
 $router = new Router();
+
+
+$router->get("/", function (Request $request) {
+    $response = new Response(200);
+
+    $response->sendHtml("public/index.html", [
+        "title" => "Casa Init",
+    ]);
+});
 
 $router->get("/users/{id}", function (Request $request) {
     $id = $request->params['id'];
