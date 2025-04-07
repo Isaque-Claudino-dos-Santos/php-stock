@@ -28,4 +28,20 @@ class Response
 
         echo $content;
     }
+
+    public function sendHtml(string $path, array $data = []): void
+    {
+        $file = __ROOT__ . "/" . $path;
+
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $contentLength = filesize($file);
+        header("content-type: text/html; charset=utf-8");
+        http_response_code($contentLength <= 0 ? 204 : $this->status);
+
+        extract($data);
+        require_once $file;
+    }
 }
