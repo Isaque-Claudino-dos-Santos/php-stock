@@ -1,6 +1,6 @@
 <?php
 
-use App\Framework\{Router, Response, Request};
+use App\Framework\{Router, Response, Request, Mysql};
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -11,7 +11,7 @@ require __DIR__ . '/helpers.php';
 require_once __DIR__ . '/autoload.php';
 
 $router = new Router();
-
+$mysql = new Mysql();
 
 $router->get("/", function (Request $request) {
     $response = new Response(200);
