@@ -1,4 +1,3 @@
 <?php
 
-
-print("hello world");
+echo "server ok";
