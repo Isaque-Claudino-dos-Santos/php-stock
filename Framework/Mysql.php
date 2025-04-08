@@ -21,8 +21,8 @@ class Mysql
 
     public static function getInstance(): Mysql
     {
-        if (!self::$instance) {
-            self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new Mysql();
         }
 
         return self::$instance;
@@ -40,5 +40,20 @@ class Mysql
     {
         $database = "`" . self::DB_NAME . "`";
         $this->pdo->exec("CREATE DATABASE IF NOT EXISTS $database");
+    }
+
+    public function migrate(string $migrationsDir): void
+    {
+        $migrationsDir = __ROOT__ . "/" . $migrationsDir;
+
+        foreach (scandir($migrationsDir) as $fileName) {
+            if ($fileName === '.' || $fileName === '..') continue;
+            $fileDir = $migrationsDir . "/" . $fileName;
+            $file = fopen($fileDir, "r");
+            $fileSize = filesize($fileDir);
+            $fileContent = fread($file, $fileSize);
+            $this->pdo->exec($fileContent);
+            fclose($file);
+        }
     }
 }

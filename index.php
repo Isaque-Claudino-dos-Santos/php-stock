@@ -11,7 +11,8 @@ require_once __DIR__ . '/autoload.php';
 require __DIR__ . '/helpers.php';
 
 $router = new Router();
-$mysql = new Mysql();
+
+//Mysql::getInstance()->migrate('Database/migrations');
 
 $router->get("/", function (Request $request) {
     $response = new Response(200);
