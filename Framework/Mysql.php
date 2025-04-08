@@ -5,6 +5,7 @@ namespace App\Framework;
 
 class Mysql
 {
+    private static Mysql $instance;
     public readonly \PDO $pdo;
     private const string USER = 'test';
     private const string PASS = 'Test@123';
@@ -16,6 +17,15 @@ class Mysql
     {
         $this->pdo = new \PDO($this->getDNS(), self::USER, self::PASS);
         $this->createDatabase();
+    }
+
+    public static function getInstance(): Mysql
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
     private function getDNS(): string
