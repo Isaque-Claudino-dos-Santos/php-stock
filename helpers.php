@@ -1,6 +1,8 @@
 <?php
 
 
+use  \App\Framework\Mysql;
+
 if (!function_exists('dd')) {
     function dd(mixed $value, bool $noExist = false): void
     {
@@ -11,5 +13,13 @@ if (!function_exists('dd')) {
         if (!$noExist) {
             exit;
         }
+    }
+}
+
+
+if (!function_exists('mysql')) {
+    function mysql(): Mysql
+    {
+        return Mysql::getInstance();
     }
 }
