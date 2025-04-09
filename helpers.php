@@ -23,3 +23,10 @@ if (!function_exists('mysql')) {
         return Mysql::getInstance();
     }
 }
+
+if (!function_exists('response')) {
+    function response(int $status, mixed $content): \App\Framework\Response
+    {
+        return new \App\Framework\Response($status, $content);
+    }
+}
