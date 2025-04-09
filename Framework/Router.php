@@ -11,13 +11,13 @@ class Router
     private array $routes = [];
 
 
-    public function get(string $uri, \Closure $action): void
+    public function get(string $uri, \Closure|array $action): void
     {
         $route = new Route($uri, 'GET', $action);
         $this->routes[] = $route;
     }
 
-    public function post(string $uri, \Closure $action): void
+    public function post(string $uri, \Closure|array $action): void
     {
         $route = new Route($uri, 'POST', $action);
         $this->routes[] = $route;
