@@ -1,6 +1,7 @@
 <?php
 
 use App\Framework\{Router, Response, Request, Mysql};
+use App\Controllers\{ExampleController};
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -14,13 +15,7 @@ $router = new Router();
 
 //Mysql::getInstance()->migrate('Database/migrations');
 
-$router->get("/", function (Request $request) {
-    $response = new Response(200);
-
-    $response->sendHtml("public/index.html", [
-        "title" => "Casa Init",
-    ]);
-});
+$router->get("/", [ExampleController::class, "index"]);
 
 $router->get("/users/{id}", function (Request $request) {
     $id = $request->params['id'];

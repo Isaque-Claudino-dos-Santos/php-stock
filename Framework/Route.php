@@ -5,9 +5,9 @@ namespace App\Framework;
 class Route
 {
     public function __construct(
-        public readonly string   $uri = "/",
-        public readonly string   $method = "GET",
-        public readonly \Closure $action,
+        public readonly string         $uri = "/",
+        public readonly string         $method = "GET",
+        public readonly \Closure|array $action,
     )
     {
     }
@@ -27,6 +27,12 @@ class Route
 
     public function callAction(): void
     {
-        call_user_func_array($this->action, [new Request($this)]);
+        $action = $this->action;
+
+        if (is_array($action)) {
+            $action[0] = new $action[0];
+        }
+
+        call_user_func_array($action, [new Request($this)]);
     }
 }
