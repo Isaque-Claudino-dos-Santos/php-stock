@@ -25,7 +25,7 @@ if (!function_exists('mysql')) {
 }
 
 if (!function_exists('response')) {
-    function response(int $status, mixed $content): \App\Framework\Response
+    function response(int $status = 200, mixed $content = null): \App\Framework\Response
     {
         return new \App\Framework\Response($status, $content);
     }
