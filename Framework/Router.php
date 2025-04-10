@@ -23,6 +23,18 @@ class Router
         $this->routes[] = $route;
     }
 
+    public function put(string $uri, array $action): void
+    {
+        $route = new Route($uri, 'PUT', $action);
+        $this->routes[] = $route;
+    }
+
+    public function delete(string $uri, array $action): void
+    {
+        $route = new Route($uri, 'DELETE', $action);
+        $this->routes[] = $route;
+    }
+
 
     public function boot(): void
     {

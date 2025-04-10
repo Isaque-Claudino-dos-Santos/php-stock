@@ -5,11 +5,26 @@ namespace App\Framework;
 class Request
 {
     public readonly array $params;
+    public readonly array $query;
+    public readonly array $body;
 
 
     public function __construct(private readonly Route $route)
     {
         $this->params = $this->getUriParamsFromRequest();
+        $this->query = $this->getQueryFromRequest();
+        $this->body = $this->getBodyFromRequest();
+    }
+
+    private function getBodyFromRequest(): array
+    {
+        return $_POST ?? [];
+    }
+
+
+    private function getQueryFromRequest(): array
+    {
+        return $_GET ?? [];
     }
 
     private function getUriParamsFromRequest(): array
