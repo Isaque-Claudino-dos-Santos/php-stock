@@ -1,7 +1,7 @@
 <?php
 
 use App\Framework\{Router, Response, Request, Mysql};
-use App\Controllers\{ExampleController};
+use App\Controllers\{ExampleController, ProductController};
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -15,14 +15,17 @@ $router = new Router();
 
 //Mysql::getInstance()->migrate('Database/migrations');
 
-$router->get("/", [ExampleController::class, "index"]);
-
-$router->get("/users/{id}", function (Request $request) {
-    $id = $request->params['id'];
-    $response = new Response(200, "<h1>Hello Users <code>id #$id</code></h1>");
-
-    $response->send();
+$router->get('/', function () {
+    response()->sendHtml('Views/index.html', ['title' => 'Home']);
 });
+
+
+$router->get('/products', [ProductController::class, 'productsPagination']);
+$router->get('/products/create', [ProductController::class, 'productCreateForm']);
+$router->get('/products/update/{id}', [ProductController::class, 'productUpdateForm']);
+$router->post('/products', [ProductController::class, 'productCreate']);
+$router->put('/products/{id}', [ProductController::class, 'productUpdate']);
+$router->delete('/products/{id}', [ProductController::class, 'productDelete']);
 
 $router->boot();
 
