@@ -16,6 +16,43 @@ class Product
     public string $create_at;
     public string $update_at;
 
+    public static function paginate(int $limit = 30, int $page = 1): array
+    {
+        $mysql = mysql();
+
+        $sql = 'SELECT * FROM products LIMIT :limit OFFSET :offset';
+        $offset = $limit * ($page - 1);
+        $statement = $mysql->pdo->prepare($sql);
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+
+        $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $totalItems = count($products);
+        $totalPages = intval(ceil(Product::totalInDatabase() / $limit));
+        $hasNextPage = $page < $totalPages;
+        $hasPreviousPage = $page > 1;
+
+        return [
+            'items' => $products,
+            'limit' => $limit,
+            'page' => $page,
+            'total_items' => $totalItems,
+            'total_pages' => $totalPages,
+            'has_next_page' => $hasNextPage,
+            'has_previous_page' => $hasPreviousPage,
+        ];
+    }
+
+    public static function totalInDatabase(): int
+    {
+        $mysql = mysql();
+        $sql = 'SELECT COUNT(*) FROM products';
+        $statement = $mysql->pdo->prepare($sql);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
     public function create(): void
     {
         $mysql = mysql();
