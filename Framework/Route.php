@@ -14,15 +14,23 @@ class Route
 
     public function wasRequested(): bool
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestPath = $_SERVER['PATH_INFO'] ?? '//';
 
-        if (count(explode("/", $requestUri)) !== count(explode("/", $this->uri))) {
+        $explodedRequestPath = explode("/", $requestPath);
+
+        if ($explodedRequestPath[count($explodedRequestPath) - 1] === "") {
+            unset($explodedRequestPath[count($explodedRequestPath) - 1]);
+        }
+
+        if (count($explodedRequestPath) !== count(explode("/", $this->uri))) {
             return false;
         }
 
+        $requestMethod = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+
         return
-            $_SERVER['REQUEST_METHOD'] === $this->method &&
-            preg_match("/" . str_replace("/", "\/", preg_replace("/{\w*}/", "\w*", $this->uri)) . "/", $requestUri);
+            $requestMethod === $this->method &&
+            preg_match("/^" . str_replace("/", "\/", preg_replace("/{\w*}/", "\w*", $this->uri)) . "\/?$/", $requestPath);
     }
 
     public function callAction(): void
