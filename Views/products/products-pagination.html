@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Products List</title>
+</head>
+<body>
+
+<a href="/products/create">Create a new product +</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Description</th>
+        <th>Creation Date</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($paginate['items'] as $item): ?>
+    <tr>
+        <td><?= $item['id'] ?></td>
+        <td><?= $item['name'] ?></td>
+        <td><?= $item['price'] ?></td>
+        <td><?= $item['quantity'] ?></td>
+        <td><?= $item['description'] ?></td>
+        <td><?= $item['created_at'] ?></td>
+        <td>
+            <a href="/products/update/<?= $item['id'] ?>">Update</a>
+        </td>
+        <td>
+            <form method="POST" action="/products/<?= $item['id'] ?>">
+                <input type="hidden" name="_method" value="DELETE"/>
+
+                <button>DELETE</button>
+            </form>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<div>
+    <?php if($paginate['has_previous_page']): ?>
+    <button id="btn-previous">Previous</button>
+    <?php endif; ?>
+
+    <p><?= $paginate['page'] ?></p>
+
+    <?php if($paginate['has_next_page']): ?>
+    <button id="btn-next">Next</button>
+    <?php endif; ?>
+</div>
+
+<script>
+    const btnPrevious = document.querySelector('#btn-previous')
+    const btnNext = document.querySelector('#btn-next')
+    const url = new URL(location.href)
+
+    let page = Number("<?= $paginate['page'] ?>")
+
+    btnPrevious?.addEventListener('click', () => {
+        const hasPreviousPage = Boolean("<?= $paginate['has_previous_page'] ?>");
+
+        if (!hasPreviousPage) return;
+
+        page--;
+
+        url.searchParams.set('page', String(page));
+        location.href = url.href;
+    })
+
+
+    btnNext?.addEventListener('click', () => {
+        const hasNextPage = Boolean("<?= $paginate['has_next_page'] ?>");
+
+        if (!hasNextPage) return;
+
+        page++
+
+        url.searchParams.set('page', String(page));
+        location.href = url.href;
+    })
+</script>
+
+</body>
+</html>
