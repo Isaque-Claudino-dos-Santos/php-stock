@@ -1,0 +1,42 @@
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .72em;
+}
+
+.form_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form_label {
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.08em;
+}
+
+.form_label:has(+ .form_input[required]):after {
+    content: '*';
+    color: #aa3333;
+}
+
+.form_input {
+    width: 100%;
+    padding: .64em 0.32em;
+    background: transparent;
+    border: 1px solid #efefef;
+    border-radius: .16em;
+
+}
+
+.form_button {
+    width: max-content;
+    font-size: 1.16em;
+    font-weight: 600;
+    border: 1px solid #efefef;
+    border-radius: .32em;
+    padding: 10px;
+    align-self: center;
+    cursor: pointer;
+}
