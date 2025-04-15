@@ -1,0 +1,1 @@
+console.log("Hello World on -> views/assets/scripts/index.js")
