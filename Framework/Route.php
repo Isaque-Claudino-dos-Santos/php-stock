@@ -30,7 +30,7 @@ class Route
 
         return
             $requestMethod === $this->method &&
-            preg_match("/^" . str_replace("/", "\/", preg_replace("/{\w*}/", "\w*", $this->uri)) . "\/?$/", $requestPath);
+            preg_match("/^" . str_replace("/", "\/", preg_replace("/{\w*}/", "\w.*", $this->uri)) . "\/?$/", $requestPath);
     }
 
     public function callAction(): void
