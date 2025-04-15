@@ -7,56 +7,65 @@
 
 <body>
 
-<a href="/products/create">Create a new product +</a>
+<header>
+    <a href="/"><</a>
+</header>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Description</th>
-        <th>Creation Date</th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach($paginate['items'] as $item): ?>
-    <tr>
-        <td><?= $item['id'] ?></td>
-        <td><?= $item['name'] ?></td>
-        <td><?= $item['price'] ?></td>
-        <td><?= $item['quantity'] ?></td>
-        <td><?= $item['description'] ?></td>
-        <td><?= $item['created_at'] ?></td>
-        <td>
-            <a href="/products/update/<?= $item['id'] ?>">Update</a>
-        </td>
-        <td>
-            <form method="POST" action="/products/<?= $item['id'] ?>">
-                <input type="hidden" name="_method" value="DELETE"/>
+<main class="container">
+    <a href="/products/create">Create a new product +</a>
 
-                <button>DELETE</button>
-            </form>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+    <table class="table">
+        <thead class="table_head">
+        <tr class="table_line">
+            <th class="table_head_cell">ID</th>
+            <th class="table_head_cell">Name</th>
+            <th class="table_head_cell">Price</th>
+            <th class="table_head_cell">Quantity</th>
+            <th class="table_head_cell">Description</th>
+            <th class="table_head_cell">Creation Date</th>
+            <th class="table_head_cell"></th>
+            <th class="table_head_cell"></th>
+        </tr>
+        </thead>
 
-<div>
-    <?php if($paginate['has_previous_page']): ?>
-    <button id="btn-previous">Previous</button>
-    <?php endif; ?>
+        <tbody class="table_body">
 
-    <p><?= $paginate['page'] ?></p>
+        <?php foreach($paginate['items'] as $item): ?>
+        <tr class="table_line">
+            <td class="table_cell"><?= $item['id'] ?></td>
+            <td class="table_cell"><?= $item['name'] ?></td>
+            <td class="table_cell-center"><?= $item['price'] ?></td>
+            <td class="table_cell-center"><?= $item['quantity'] ?></td>
+            <td class="table_cell"><?= $item['description'] ?></td>
+            <td class="table_cell-center"><?= $item['created_at'] ?></td>
+            <td class="table_cell-center">
+                <a href="/products/update/<?= $item['id'] ?>">Update</a>
+            </td>
+            <td class="table_cell-center">
+                <form method="POST" action="/products/<?= $item['id'] ?>">
+                    <input type="hidden" name="_method" value="DELETE"/>
 
-    <?php if($paginate['has_next_page']): ?>
-    <button id="btn-next">Next</button>
-    <?php endif; ?>
-</div>
+                    <button>DELETE</button>
+                </form>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+
+        </tbody>
+    </table>
+
+    <div>
+        <?php if($paginate['has_previous_page']): ?>
+        <button id="btn-previous">Previous</button>
+        <?php endif; ?>
+
+        <p><?= $paginate['page'] ?></p>
+
+        <?php if($paginate['has_next_page']): ?>
+        <button id="btn-next">Next</button>
+        <?php endif; ?>
+    </div>
+</main>
 
 <script>
     const btnPrevious = document.querySelector('#btn-previous')

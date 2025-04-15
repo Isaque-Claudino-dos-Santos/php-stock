@@ -6,31 +6,40 @@
 </head>
 
 <body>
-<form method="POST" action="/products/<?= $id ?>">
-    <input type="hidden" name="_method" value="PUT">
 
-    <div>
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name"/>
+<header>
+    <a href="/"><</a>
+</header>
+
+<main class="container-center">
+    <div class="w-50">
+        <form method="POST" action="/products/<?= $id ?>" class="form">
+            <input type="hidden" name="_method" value="PUT">
+
+            <div class="form_group">
+                <label for="name" class="form_label">Name</label>
+                <input type="text" id="name" name="name" class="form_input" required/>
+            </div>
+
+            <div class="form_group">
+                <label for="description" class="form_label">Description</label>
+                <textarea class="form_input" id="description" name="description"></textarea>
+            </div>
+
+            <div class="form_group">
+                <label for="price" class="form_label">Price</label>
+                <input type="text" id="price" name="price" class="form_input" required/>
+            </div>
+
+            <div class="form_group">
+                <label for="quantity" class="form_label">Quantity</label>
+                <input type="text" id="quantity" name="quantity" class="form_input"/>
+            </div>
+
+            <button class="form_button">Update Product</button>
+        </form>
     </div>
-
-    <div>
-        <label for="description">Description</label>
-        <input type="text" id="description" name="description"/>
-    </div>
-
-    <div>
-        <label for="price">Price</label>
-        <input type="text" id="price" name="price"/>
-    </div>
-
-    <div>
-        <label for="quantity">Quantity</label>
-        <input type="text" id="quantity" name="quantity"/>
-    </div>
-
-    <button>Update Product</button>
-</form>
+</main>
 
 </body>
 </html>

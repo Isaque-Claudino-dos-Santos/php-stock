@@ -7,16 +7,21 @@
 
 <body>
 
-<h1>Welcome to Home Page</h1>
+<header class="container">
 
-<ul>
-    <li>
-        <a href="/products">Lista de produtos</a>
-    </li>
-    <li>
-        <a href="/products/create">Criar novo produto</a>
-    </li>
-</ul>
+    <h1 class="ml-1 p-1">Welcome to Home Page</h1>
+
+    <nav class="flex gap border rounded p-2">
+        <div class="dropdown">
+            <button class="dropdown_target">Produto</button>
+            <ul class="dropdown_items-hidden">
+                <li class="dropdown_items_item"><a href="/products">Lista de Produtos</a></li>
+                <li class="dropdown_items_item"><a href="/products/create">Criar Produto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+</header>
 
 </body>
 </html>
