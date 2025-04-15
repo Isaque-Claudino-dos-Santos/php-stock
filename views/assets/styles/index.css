@@ -1,9 +1,76 @@
 body {
-    font-family: Bahnschrift;
+    width: 100vw;
+    height: 100vh;
+    font-family: Bahnschrift, serif;
     background: #212121;
+    color: #efefef;
 }
 
-a, body {
+button {
+    background: transparent;
+    border: none;
     color: #efefef;
-    text-decoration-color: #3333ff;
+}
+
+a, input, textarea {
+    color: #efefef;
+}
+
+a:hover {
+    text-decoration: underline #3333ff;
+}
+
+.title {
+
+}
+
+.container {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.container-center {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.flex {
+    display: flex;
+
+}
+
+.gap {
+    gap: 1em;
+}
+
+.border {
+    border: 1px solid #999999;
+}
+
+.rounded {
+    border-radius: .32em;
+}
+
+.p-1 {
+    padding: 0.32em;
+}
+
+.p-2 {
+    padding: 0.64em;
+}
+
+.ml-1 {
+    margin-left: 0.32em;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-25 {
+    width: 25%;
 }
