@@ -5,9 +5,9 @@ namespace App\Framework;
 class Route
 {
     public function __construct(
+        public readonly \Closure|array $action,
         public readonly string         $uri = "/",
         public readonly string         $method = "GET",
-        public readonly \Closure|array $action,
     )
     {
     }
