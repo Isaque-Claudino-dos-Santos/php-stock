@@ -30,3 +30,53 @@ if (!function_exists('response')) {
         return new \App\Framework\Response($status, $content);
     }
 }
+
+if (!function_exists('template')) {
+    function template(string $file): void
+    {
+        require(__ROOT__ . "/views/templates/$file" . "_template.html");
+    }
+}
+
+if (!function_exists('style')) {
+    function style(string $file): string
+    {
+        $host = $_SERVER['HTTP_HOST'];
+        $protocol = 'http';
+
+        $href = "$protocol://$host/styles/$file";
+
+        return $href;
+    }
+}
+
+if (!function_exists('script')) {
+    function script(string $file): string
+    {
+        $host = $_SERVER['HTTP_HOST'];
+        $protocol = 'http';
+
+        $href = "$protocol://$host/scripts/$file";
+
+        return $href;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
