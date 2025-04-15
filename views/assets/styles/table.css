@@ -1,0 +1,32 @@
+.table {
+    width: 100%;
+}
+
+.table_head {
+}
+
+.table_body {
+}
+
+.table_line {
+}
+
+.table_line:nth-last-child(2n) {
+    background: #5555aa;
+}
+
+.table_line:nth-child(2n) {
+    background: #323232;
+}
+
+.table_head_cell {
+    text-align: center;
+}
+
+.table_cell {
+    padding: .16em;
+}
+
+.table_cell-center {
+    text-align: center;
+}

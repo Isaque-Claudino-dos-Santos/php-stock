@@ -3,4 +3,7 @@
     margin: 0;
     border: none;
     box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    outline: none;
 }

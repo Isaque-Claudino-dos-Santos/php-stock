@@ -1,0 +1,37 @@
+.dropdown {
+}
+
+.dropdown:after {
+    /*content: '▼';*/
+    content: '-';
+}
+
+.dropdown:has(.dropdown_items-hidden):after {
+    /*content: '▲';*/
+    content: '+';
+}
+
+.dropdown_target {
+    font-weight: 700;
+    font-size: 1em;
+    background: transparent;
+    cursor: pointer;
+}
+
+.dropdown_items {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background: #000000aa;
+    padding: 0.64em;
+    border-radius: 0.3em;
+    gap: 0.64em;
+    backdrop-filter: blur(1px);
+}
+
+.dropdown_items-hidden {
+    display: none;
+}
+
+.dropdown_items_item {
+}
