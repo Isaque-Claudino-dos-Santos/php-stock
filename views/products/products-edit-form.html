@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Add New Product</title>
+    <?= template('head') ?>
 </head>
+
 <body>
 <form method="POST" action="/products/<?= $id ?>">
     <input type="hidden" name="_method" value="PUT">
