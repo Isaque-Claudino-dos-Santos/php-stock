@@ -1,0 +1,9 @@
+body {
+    font-family: Bahnschrift;
+    background: #212121;
+}
+
+a, body {
+    color: #efefef;
+    text-decoration-color: #3333ff;
+}

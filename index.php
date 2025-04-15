@@ -11,12 +11,26 @@ require __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/autoload.php';
 require __DIR__ . '/helpers.php';
 
-$router = new Router();
-
 //Mysql::getInstance()->migrate('Database/migrations');
 
+
+$router = new Router();
+
+// ## Route to return styles system ##
+$router->get('/styles/{file}', function (Request $request) {
+    $file = $request->params['file'];
+    response()->sendCSS("/views/assets/styles/$file");
+});
+
+// ## Route to return scripts system ##
+$router->get('/scripts/{file}', function (Request $request) {
+    $file = $request->params['file'];
+    response()->sendJS("/views/assets/scripts/$file");
+});
+
+
 $router->get('/', function () {
-    response()->sendHtml('Views/index.html', ['title' => 'Home']);
+    response()->sendHtml('views/index.html', ['title' => 'Home']);
 });
 
 

@@ -44,4 +44,36 @@ class Response
         extract($data);
         require_once $file;
     }
+
+    public function sendCSS(string $path): void
+    {
+        $file = __ROOT__ . "/" . $path;
+
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $contentLength = filesize($file);
+        header("content-type: text/css; charset=utf-8");
+        http_response_code($contentLength <= 0 ? 204 : $this->status);
+
+
+        echo file_get_contents($file);
+    }
+
+    public function sendJS(string $path): void
+    {
+        $file = __ROOT__ . "/" . $path;
+
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $contentLength = filesize($file);
+        header("content-type: text/javascript; charset=utf-8");
+        http_response_code($contentLength <= 0 ? 204 : $this->status);
+
+
+        echo file_get_contents($file);
+    }
 }
