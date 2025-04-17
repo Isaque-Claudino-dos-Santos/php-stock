@@ -13,7 +13,6 @@ require __DIR__ . '/helpers.php';
 
 //Mysql::getInstance()->migrate('Database/migrations');
 
-
 $router = new Router();
 
 // ## Route to return styles system ##
@@ -30,7 +29,7 @@ $router->get('/scripts/{file}', function (Request $request) {
 
 
 $router->get('/', function () {
-    response()->sendHtml('views/index.html', ['title' => 'Home']);
+    response()->sendHtml('views/index.php', ['title' => 'Home']);
 });
 
 
@@ -42,6 +41,7 @@ $router->put('/products/{id}', [ProductController::class, 'productUpdate']);
 $router->delete('/products/{id}', [ProductController::class, 'productDelete']);
 
 $router->boot();
+
 
 
 

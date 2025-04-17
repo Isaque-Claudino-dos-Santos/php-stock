@@ -13,18 +13,18 @@ class ProductController
             page: $request->query['page'] ?? 1,
         );
 
-        response()->sendHtml('views/products/products-pagination.html', compact('paginate'));
+        response()->sendHtml('views/products/products-pagination.php', compact('paginate'));
     }
 
     public function productCreateForm(Request $request): void
     {
-        response()->sendHtml('views/products/products-add-form.html');
+        response()->sendHtml('views/products/products-add-form.php');
     }
 
     public function productUpdateForm(Request $request): void
     {
         $id = $request->params['id'];
-        response()->sendHtml('views/products/products-edit-form.html', compact('id'));
+        response()->sendHtml('views/products/products-edit-form.php', compact('id'));
     }
 
     public function productCreate(Request $request): void

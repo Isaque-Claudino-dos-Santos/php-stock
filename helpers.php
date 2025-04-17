@@ -62,10 +62,21 @@ if (!function_exists('script')) {
     }
 }
 
+if (!function_exists('component')) {
+    function component(string $file, array|Closure|string ...$data): void
+    {
 
+        if (key_exists(0, $data) && is_callable($data[0]) || key_exists(0, $data) && is_string($data[0])) {
+            extract(['element' => $data[0]]);
+        }
 
+        if (is_array($data)) {
+            extract($data);
+        }
 
-
+        require __ROOT__ . "/views/components/$file" . '_component.php';
+    }
+}
 
 
 
