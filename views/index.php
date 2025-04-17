@@ -2,14 +2,21 @@
 <html lang="pt-br">
 
 <head>
-    <?= template('head') ?>
+    <?php template('head') ?>
 </head>
 
 <body>
 
 <header class="container">
 
-    <h1 class="ml-1 p-1">Welcome to Home Page</h1>
+
+    <?php
+    component('title',
+        text: 'Welcome to Home Page',
+        class: 'ml-1 p-1'
+    );
+
+    ?>
 
     <nav class="flex gap border rounded p-2">
         <div class="dropdown">
