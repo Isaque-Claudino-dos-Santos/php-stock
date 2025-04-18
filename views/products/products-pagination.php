@@ -48,69 +48,41 @@
 
     ?>
 
-    <div>
-        <?php if ($paginate['has_previous_page']): ?>
-            <button id="btn-previous">Previous</button>
-        <?php endif; ?>
 
-        <p><?= $paginate['page'] ?></p>
-
-        <?php if ($paginate['has_next_page']): ?>
-            <button id="btn-next">Next</button>
-        <?php endif; ?>
+    <div class="flex-center-col">
+        <?php component('pagination', paginate: $paginate); ?>
     </div>
+
+
 </main>
 
 <script>
-    const btnPrevious = document.querySelector('#btn-previous')
-    const btnNext = document.querySelector('#btn-next')
-    const headCells = document.querySelectorAll('#table_head_cell');
-    const url = new URL(location.href)
 
-    let page = Number("<?= $paginate['page'] ?>")
-
-    btnPrevious?.addEventListener('click', () => {
-        const hasPreviousPage = Boolean("<?= $paginate['has_previous_page'] ?>");
-
-        if (!hasPreviousPage) return;
-
-        page--;
-
-        url.searchParams.set('page', String(page));
-        location.href = url.href;
-    })
+    (() => {
+        const headCells = document.querySelectorAll('#table_head_cell');
+        const url = new URL(location.href)
 
 
-    btnNext?.addEventListener('click', () => {
-        const hasNextPage = Boolean("<?= $paginate['has_next_page'] ?>");
+        headCells.forEach((element) => {
+            element.addEventListener('click', (event) => {
+                const isEnabledOrderBy = Boolean(element.getAttribute('data-enabled-order'));
 
-        if (!hasNextPage) return;
+                if (!isEnabledOrderBy) {
+                    return;
+                }
 
-        page++
+                element.setAttribute('data-order-by', url.searchParams.get('order_by') ?? 'asc')
 
-        url.searchParams.set('page', String(page));
-        location.href = url.href;
-    })
+                element.getAttribute('data-order-by') === 'desc' ?
+                    element.setAttribute('data-order-by', 'asc') :
+                    element.setAttribute('data-order-by', 'desc')
 
-    headCells.forEach((element) => {
-        element.addEventListener('click', (event) => {
-            const isEnabledOrderBy = Boolean(element.getAttribute('data-enabled-order'));
-
-            if (!isEnabledOrderBy) {
-                return;
-            }
-
-            element.setAttribute('data-order-by', url.searchParams.get('order_by') ?? 'asc')
-
-            element.getAttribute('data-order-by') === 'desc' ?
-                element.setAttribute('data-order-by', 'asc') :
-                element.setAttribute('data-order-by', 'desc')
-
-            url.searchParams.set('order_by', element.getAttribute('data-order-by'));
-            url.searchParams.set('order_column', element.getAttribute('data-order-column'));
-            location.href = url.href;
+                url.searchParams.set('order_by', element.getAttribute('data-order-by'));
+                url.searchParams.set('order_column', element.getAttribute('data-order-column'));
+                location.href = url.href;
+            })
         })
-    })
+    })()
 </script>
 
 </body>
