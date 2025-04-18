@@ -6,10 +6,15 @@
 
 
 component('table/root', function () use ($lines, $items, $headers) {
-    component('table/header', function () use ($headers) {
-        component('table/line', function () use ($headers) {
-            foreach ($headers as $header) {
-                component('table/head_cell', $header);
+    component('table/header', function () use ($headers, $lines) {
+        component('table/line', function () use ($headers, $lines) {
+            foreach ($headers as $key => $header) {
+                $orderColumn = array_keys($lines)[$key];
+                component('table/head_cell',
+                    text: $header,
+                    orderColumn: $orderColumn,
+                    enabledOrder: key_exists($orderColumn, $lines) && !is_numeric($orderColumn)
+                );
             }
         });
     });

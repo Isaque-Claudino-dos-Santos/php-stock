@@ -16,16 +16,28 @@ class Product
     public string $create_at;
     public string $update_at;
 
-    public static function paginate(int $limit = 30, int $page = 1): array
+    public static function paginate(int $limit, int $page, string $orderBy, string $orderColumn): array
     {
-        $mysql = mysql();
 
-        $sql = 'SELECT * FROM products LIMIT :limit OFFSET :offset';
+        $allowedColumns = ['id', 'name', 'price', 'quantity', 'description', 'created_at'];
+        $allowedOrder = ['ASC', 'DESC'];
+
+        if (!in_array($orderColumn, $allowedColumns)) {
+            throw new \PDOException("Invalid Column: {$orderColumn}");
+        }
+
+        if (!in_array(strtoupper($orderBy), $allowedOrder)) {
+            throw new \PDOException("Invalid Direction Order: {$orderBy}");
+        }
+
+        $mysql = mysql();
+        $sql = "SELECT * FROM products ORDER BY $orderColumn $orderBy LIMIT :limit OFFSET :offset";
         $offset = $limit * ($page - 1);
         $statement = $mysql->pdo->prepare($sql);
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
+
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
         $totalItems = count($products);

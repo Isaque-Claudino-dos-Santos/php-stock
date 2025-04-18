@@ -26,9 +26,9 @@
         lines: [
             'id' => fn($value) => $value,
             'name' => fn($value) => $value,
-            'description' => fn($value) => $value,
             'price' => fn($value) => $value,
             'quantity' => fn($value) => $value,
+            'description' => fn($value) => $value,
             'created_at' => fn($value) => $value,
             function (array $item) {
                 component('link',
@@ -43,7 +43,7 @@
                     element: '<button>DELETE</button>'
                 );
             }
-        ]
+        ],
     );
 
     ?>
@@ -64,6 +64,7 @@
 <script>
     const btnPrevious = document.querySelector('#btn-previous')
     const btnNext = document.querySelector('#btn-next')
+    const headCells = document.querySelectorAll('#table_head_cell');
     const url = new URL(location.href)
 
     let page = Number("<?= $paginate['page'] ?>")
@@ -89,6 +90,26 @@
 
         url.searchParams.set('page', String(page));
         location.href = url.href;
+    })
+
+    headCells.forEach((element) => {
+        element.addEventListener('click', (event) => {
+            const isEnabledOrderBy = Boolean(element.getAttribute('data-enabled-order'));
+            console.log(isEnabledOrderBy);
+            if (!isEnabledOrderBy) {
+                return;
+            }
+
+            element.setAttribute('data-order-by', url.searchParams.get('order_by') ?? 'asc')
+
+            element.getAttribute('data-order-by') === 'desc' ?
+                element.setAttribute('data-order-by', 'asc') :
+                element.setAttribute('data-order-by', 'desc')
+
+            url.searchParams.set('order_by', element.getAttribute('data-order-by'));
+            url.searchParams.set('order_column', element.getAttribute('data-order-column'));
+            location.href = url.href;
+        })
     })
 </script>
 

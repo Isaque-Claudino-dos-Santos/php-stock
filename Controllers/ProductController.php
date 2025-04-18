@@ -10,7 +10,10 @@ class ProductController
     public function productsPagination(Request $request): void
     {
         $paginate = Product::paginate(
+            limit: 30,
             page: $request->query['page'] ?? 1,
+            orderBy: $request->query['order_by'] ?? 'asc',
+            orderColumn: $request->query['order_column'] ?? 'id',
         );
 
         response()->sendHtml('views/products/products-pagination.php', compact('paginate'));
