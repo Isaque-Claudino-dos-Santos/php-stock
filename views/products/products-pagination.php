@@ -95,7 +95,7 @@
     headCells.forEach((element) => {
         element.addEventListener('click', (event) => {
             const isEnabledOrderBy = Boolean(element.getAttribute('data-enabled-order'));
-            console.log(isEnabledOrderBy);
+
             if (!isEnabledOrderBy) {
                 return;
             }
