@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Framework\SQL;
+
+use App\Framework\SQL\Operations\WhereOperation;
+
+class SqlBuilder
+{
+    private string $select = '*';
+    private string $table = '';
+    private array $wheres = [];
+    private ?int $limit = null;
+    private ?int $offset = null;
+
+
+    public function select(string ...$values): self
+    {
+        $this->select = implode(', ', $values);
+        return $this;
+    }
+
+    public function table(string $value): self
+    {
+        $this->table = $value;
+        return $this;
+    }
+
+    public function where(string $key, string $value, string $operator = '='): self
+    {
+        $this->wheres[] = new WhereOperation($key, $value, $operator, 'AND');
+        return $this;
+    }
+
+    public function whereAnd(string $key, string $value, string $operator = '='): self
+    {
+        $this->wheres[] = new WhereOperation($key, $value, $operator, 'AND');
+        return $this;
+    }
+
+    public function whereOr(string $key, string $value, string $operator = '='): self
+    {
+        $this->wheres[] = new WhereOperation($key, $value, $operator, 'OR');
+        return $this;
+    }
+
+    private function buildWheres(): string
+    {
+        if (empty($this->wheres)) {
+            return '';
+        }
+
+        $sql = ' WHERE';
+
+        foreach ($this->wheres as $key => $where) {
+            if ($key > 0) {
+                $sql .= " {$where->type}";
+            }
+
+            $sql .= " {$where->build()}";
+        }
+
+        return $sql;
+    }
+
+    public function limit(int $limit): self
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    public function offset(int $offset): self
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    public function update(array $data): string
+    {
+        $set = [];
+
+        foreach ($data as $key => $value) {
+            $set[] = "{$key} = `$value`";
+        }
+
+        $set = implode(', ', $set);
+
+        $sql = "UPDATE {$this->table}";
+        $sql .= " SET {$set}";
+        $sql .= $this->buildWheres();
+
+        return $sql;
+    }
+
+    public function delete(): string
+    {
+        $sql = "DELETE FROM {$this->table}";
+        $sql .= $this->buildWheres();
+
+        return $sql;
+    }
+
+    public function create(array $data): string
+    {
+        $keys = implode(', ', array_keys($data));
+        $values = implode(', ', array_map(fn($value) => "`$value`", array_values($data)));
+
+        $sql = "INSERT INTO ({$this->table}) ";
+        $sql .= ($keys);
+        $sql .= " VALUES ($values)";
+
+        return $sql;
+    }
+
+    public function query(): string
+    {
+        $sql = "SELECT {$this->select}";
+        $sql .= " FROM {$this->table}";
+
+        $sql .= $this->buildWheres();
+
+        if ($this->limit) {
+            $sql .= " LIMIT {$this->limit}";
+        }
+
+        if ($this->offset) {
+            $sql .= " OFFSET {$this->offset}";
+        }
+
+        return $sql;
+    }
+
+
+}
