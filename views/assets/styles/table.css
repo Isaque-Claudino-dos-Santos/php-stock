@@ -15,7 +15,7 @@
     background: #5555aa;
 }
 
-.table_line:nth-child(2n) {
+.table_line:nth-last-child(2-n) {
     background: #323232;
 }
 
