@@ -3,7 +3,7 @@
 
 namespace App\Framework;
 
-use App\Models\Ecommerce;
+use App\Framework\SQL\SqlBuilder;
 
 class Mysql
 {
@@ -65,10 +65,32 @@ class Mysql
         }
     }
 
+    public function fetch(string $sql): array|null
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    public function query(string $table): array
+    {
+        $sql = new SqlBuilder()->table($table)->query();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function total(string $model): int
     {
         $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
-        $table = $model::TABLE;
+        $table = $model::$table;
         $sql = "SELECT COUNT($primaryKey) FROM $table";
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
@@ -88,7 +110,7 @@ class Mysql
             throw new \PDOException("Invalid Direction Order: {$orderBy}");
         }
 
-        $table = $model::TABLE;
+        $table = $model::$table;
         $fields = implode(', ', $model::FIELDS);
 
         $sql = "SELECT {$fields} FROM {$table} ORDER BY $orderColumn $orderBy LIMIT :limit OFFSET :offset";
@@ -137,51 +159,12 @@ class Mysql
     /**
      * @template  T
      * @param T $model
-     * @return array<T>
-     */
-    public function all(string $model, array|string ...$select): array
-    {
-        $table = $model::TABLE;
-
-        $querySelect = implode(', ', $select);
-
-        if (empty($querySelect)) {
-            $querySelect = '*';
-        }
-
-        $sql = "SELECT $querySelect FROM $table";
-        $statement = $this->pdo->prepare($sql);
-        $statement->execute();
-        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
-        $items = [];
-
-        foreach ($rows as $row) {
-            $objClass = new $model();
-            foreach ($select as $field) {
-                $objClassField = $field;
-
-                if (!property_exists($objClass, $field)) {
-                    $objClassField = snakeCaseToCamelCase($field);
-                }
-
-                $objClass->$objClassField = $row[$field];
-            }
-            $items[] = $objClass;
-        }
-
-        return $items;
-    }
-
-
-    /**
-     * @template  T
-     * @param T $model
      * @param string $id
      * @return T
      */
     public function findById(string $model, string $id): mixed
     {
-        $table = $model::TABLE;
+        $table = $model::$table;
         $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
         $fields = implode(', ', $model::FIELDS);
 
@@ -214,7 +197,7 @@ class Mysql
 
     public function create(string $model, array $data): void
     {
-        $table = $model::TABLE;
+        $table = $model::$table;
         $keys = implode(', ', array_keys($data));
         $values = implode(', :', array_keys($data));
 
@@ -230,7 +213,7 @@ class Mysql
 
     public function update(string $model, int|string $id, array $data): void
     {
-        $table = $model::TABLE;
+        $table = $model::$table;
         $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
 
         $keys = array_map(fn($key) => "$key = :$key", array_keys($data));
@@ -250,7 +233,7 @@ class Mysql
 
     public function deleteById(string $model, int $id): void
     {
-        $table = $model::TABLE;
+        $table = $model::$table;
         $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
 
         $sql = "DELETE FROM $table WHERE $primaryKey = :id";

@@ -16,6 +16,6 @@ readonly  class WhereOperation
 
     public function build(): string
     {
-        return "{$this->field} {$this->operator} `{$this->value}`";
+        return "{$this->field} {$this->operator} {$this->value}";
     }
 }

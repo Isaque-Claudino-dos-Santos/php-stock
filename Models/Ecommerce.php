@@ -5,7 +5,7 @@ namespace App\Models;
 
 class Ecommerce
 {
-    public const string TABLE = "ecommerces";
+    public static string $table = "ecommerces";
     public const array FIELDS = ['id', 'name', 'created_at', 'updated_at'];
     public int $id;
     public string $name;

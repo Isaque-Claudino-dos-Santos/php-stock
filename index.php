@@ -1,6 +1,6 @@
 <?php
 
-use App\Framework\{Router, Response, Request, Mysql};
+use App\Framework\{Router, Response, Request, Mysql, SQL\SqlBuilder};
 use App\Controllers\{ExampleController, ProductController, EcommerceController};
 
 ini_set('display_errors', '1');

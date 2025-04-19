@@ -11,16 +11,33 @@ class SqlBuilder
     private array $wheres = [];
     private ?int $limit = null;
     private ?int $offset = null;
+    private array $orders = [];
 
+    public static function build(): SqlBuilder
+    {
+        return new self();
+    }
 
     public function select(string ...$values): self
     {
         $this->select = implode(', ', $values);
+
+        if (empty($this->select)) {
+            $this->select = '*';
+        }
+
         return $this;
     }
 
     public function table(string $value): self
     {
+        if (class_exists($value)) {
+            if (property_exists($value, 'table')) {
+                $this->table = $value::$table;
+                return $this;
+            }
+        }
+
         $this->table = $value;
         return $this;
     }
@@ -53,7 +70,7 @@ class SqlBuilder
 
         foreach ($this->wheres as $key => $where) {
             if ($key > 0) {
-                $sql .= " {$where->type}";
+                $sql .= " '{$where->type}'";
             }
 
             $sql .= " {$where->build()}";
@@ -74,12 +91,18 @@ class SqlBuilder
         return $this;
     }
 
+    public function orderBy(string $column, string $direction = 'ASC'): self
+    {
+        $this->orders[] = [$column, $direction];
+        return $this;
+    }
+
     public function update(array $data): string
     {
         $set = [];
 
         foreach ($data as $key => $value) {
-            $set[] = "{$key} = `$value`";
+            $set[] = "{$key} = '$value'";
         }
 
         $set = implode(', ', $set);
@@ -94,6 +117,11 @@ class SqlBuilder
     public function delete(): string
     {
         $sql = "DELETE FROM {$this->table}";
+
+        if (empty($this->wheres)) {
+            throw new \PDOException('No wheres were found in delete query string');
+        }
+
         $sql .= $this->buildWheres();
 
         return $sql;
@@ -102,10 +130,10 @@ class SqlBuilder
     public function create(array $data): string
     {
         $keys = implode(', ', array_keys($data));
-        $values = implode(', ', array_map(fn($value) => "`$value`", array_values($data)));
+        $values = implode(', ', array_map(fn($value) => "'$value'", array_values($data)));
 
-        $sql = "INSERT INTO ({$this->table}) ";
-        $sql .= ($keys);
+        $sql = "INSERT INTO {$this->table} ";
+        $sql .= "($keys)";
         $sql .= " VALUES ($values)";
 
         return $sql;
@@ -118,6 +146,18 @@ class SqlBuilder
 
         $sql .= $this->buildWheres();
 
+        if (!empty($this->orders)) {
+            $sql .= " ORDER BY";
+            $orders = [];
+
+            foreach ($this->orders as $order) {
+                $orders[] = "{$order[0]} {$order[1]}";
+            }
+
+            $orders = implode(', ', $orders);
+            $sql .= " {$orders}";
+        }
+
         if ($this->limit) {
             $sql .= " LIMIT {$this->limit}";
         }
@@ -126,8 +166,7 @@ class SqlBuilder
             $sql .= " OFFSET {$this->offset}";
         }
 
+
         return $sql;
     }
-
-
 }

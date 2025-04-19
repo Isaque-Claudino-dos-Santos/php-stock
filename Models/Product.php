@@ -8,7 +8,7 @@ use PDO;
 
 class Product
 {
-    public const string TABLE = "products";
+    public static string $table = "products";
     public const array FIELDS = ['id', 'name', 'description', 'price', 'created_at', 'updated_at', 'ecommerce_id'];
 
     public int $id;
@@ -22,7 +22,7 @@ class Product
 
     public function ecommerce(): Ecommerce|null
     {
-        $table = Ecommerce::TABLE;
+        $table = Ecommerce::$table;
         $fields = implode(', ', Ecommerce::FIELDS);
         $sql = "SELECT $fields FROM $table WHERE id = :id";
         $statement = mysql()->pdo->prepare($sql);
