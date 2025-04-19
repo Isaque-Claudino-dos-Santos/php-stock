@@ -25,8 +25,8 @@ component('table/root', function () use ($lines, $items, $headers) {
                 foreach ($lines as $keyOfItem => $callback) {
 
                     component('table/cell', function () use ($callback, $item, $keyOfItem): string {
-                        if (key_exists($keyOfItem, $item)) {
-                            return call_user_func_array($callback, [$item[$keyOfItem]]);
+                        if (is_object($item) && property_exists($item, $keyOfItem)) {
+                            return call_user_func_array($callback, [$item->$keyOfItem]);
                         }
 
                         $value = call_user_func_array($callback, [$item]);

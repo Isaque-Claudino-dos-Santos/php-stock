@@ -1,5 +1,10 @@
 <?php
+
+
 /** @var array $paginate */
+/** @var array<\App\Models\Ecommerce> $ecommerces */
+
+
 ?>
 
 <!DOCTYPE html>
@@ -18,27 +23,37 @@
 <main class="container">
     <a href="/products/create">Create a new product +</a>
 
+<!--    TODO: implement filter by e-commerce -->
+<!--    <form method="GET" action="/products">-->
+<!--        --><?php //foreach ($ecommerces as $ecommerce): ?>
+<!--            <label for="ecommerce---><?php //= $ecommerce->id ?><!--">--><?php //= $ecommerce->name ?><!--</label>-->
+<!--            <input type="checkbox" id="ecommerce---><?php //= $ecommerce->id ?><!--" name="ecommerces[]" value="--><?php //= $ecommerce->id ?><!--"/>-->
+<!--        --><?php //endforeach; ?>
+<!---->
+<!--        <button>FIND</button>-->
+<!--    </form>-->
+
+
     <?php
 
     component('table_creation',
         items: $paginate['items'],
-        headers: ['ID', 'Name', 'Price', 'Quantity', 'Description', 'Creation Date', '', ''],
+        headers: ['ID', 'Name', 'Price', 'Description', 'Creation Date', '', ''],
         lines: [
             'id' => fn($value) => $value,
             'name' => fn($value) => $value,
             'price' => fn($value) => $value,
-            'quantity' => fn($value) => $value,
             'description' => fn($value) => $value,
-            'created_at' => fn($value) => $value,
-            function (array $item) {
+            'createdAt' => fn($value) => $value,
+            function ($item) {
                 component('link',
                     text: 'Update',
-                    href: "/products/update/{$item['id']}",
+                    href: "/products/update/{$item->id}",
                 );
             },
-            function (array $item) {
+            function ($item) {
                 component('form/root',
-                    action: "/products/{$item['id']}",
+                    action: "/products/{$item->id}",
                     method: 'delete',
                     element: '<button>DELETE</button>'
                 );

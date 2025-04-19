@@ -77,6 +77,20 @@ if (!function_exists('component')) {
         require __ROOT__ . "/views/components/$file" . '_component.php';
     }
 }
+if (!function_exists('snakeCaseToCamelCase')) {
+    function snakeCaseToCamelCase(string $value): string
+    {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $value))));
+    }
+}
+
+if (!function_exists('camelCaseToSnakeCase')) {
+    function camelCaseToSnakeCase(string $value): string
+    {
+        return ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $value)), '_');
+    }
+}
+
 
 
 

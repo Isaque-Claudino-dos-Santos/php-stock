@@ -35,10 +35,6 @@
                     required: true,
                 );
 
-                component('form/input',
-                    id: 'quantity',
-                    label: 'Quantity',
-                );
 
                 component('form/button', 'Create Product');
             });

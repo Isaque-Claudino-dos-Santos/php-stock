@@ -3,6 +3,8 @@
 
 namespace App\Framework;
 
+use App\Models\Ecommerce;
+
 class Mysql
 {
     private static Mysql $instance;
@@ -51,9 +53,209 @@ class Mysql
             $fileDir = $migrationsDir . "/" . $fileName;
             $file = fopen($fileDir, "r");
             $fileSize = filesize($fileDir);
+
+            if ($fileSize <= 0) {
+                fclose($file);
+                continue;
+            }
+
             $fileContent = fread($file, $fileSize);
             $this->pdo->exec($fileContent);
             fclose($file);
         }
+    }
+
+    public function total(string $model): int
+    {
+        $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
+        $table = $model::TABLE;
+        $sql = "SELECT COUNT($primaryKey) FROM $table";
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
+    public function paginate(string $model, int $limit, int $page, string $orderBy, string $orderColumn): array
+    {
+
+        $orderColumn = camelCaseToSnakeCase($orderColumn);
+
+        if (!in_array($orderColumn, $model::FIELDS)) {
+            throw new \PDOException("Invalid Column: {$orderColumn}");
+        }
+
+        if (!in_array(strtoupper($orderBy), ['ASC', 'DESC'])) {
+            throw new \PDOException("Invalid Direction Order: {$orderBy}");
+        }
+
+        $table = $model::TABLE;
+        $fields = implode(', ', $model::FIELDS);
+
+        $sql = "SELECT {$fields} FROM {$table} ORDER BY $orderColumn $orderBy LIMIT :limit OFFSET :offset";
+        $offset = $limit * ($page - 1);
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $statement->execute();
+
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $items = [];
+
+        foreach ($rows as $row) {
+            $objClass = new $model();
+
+            foreach ($model::FIELDS as $field) {
+                $objClassField = $field;
+
+                if (!property_exists($objClass, $field)) {
+                    $objClassField = snakeCaseToCamelCase($field);
+                }
+
+                $objClass->$objClassField = $row[$field];
+            }
+
+            $items[] = $objClass;
+        }
+
+        $totalItems = count($items);
+        $totalPages = intval(ceil($this->total($model) / $limit));
+        $hasNextPage = $page < $totalPages;
+        $hasPreviousPage = $page > 1;
+
+        return [
+            'items' => $items,
+            'limit' => $limit,
+            'page' => $page,
+            'total_items' => $totalItems,
+            'total_pages' => $totalPages,
+            'has_next_page' => $hasNextPage,
+            'has_previous_page' => $hasPreviousPage,
+        ];
+    }
+
+    /**
+     * @template  T
+     * @param T $model
+     * @return array<T>
+     */
+    public function all(string $model, array|string ...$select): array
+    {
+        $table = $model::TABLE;
+
+        $querySelect = implode(', ', $select);
+
+        if (empty($querySelect)) {
+            $querySelect = '*';
+        }
+
+        $sql = "SELECT $querySelect FROM $table";
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $items = [];
+
+        foreach ($rows as $row) {
+            $objClass = new $model();
+            foreach ($select as $field) {
+                $objClassField = $field;
+
+                if (!property_exists($objClass, $field)) {
+                    $objClassField = snakeCaseToCamelCase($field);
+                }
+
+                $objClass->$objClassField = $row[$field];
+            }
+            $items[] = $objClass;
+        }
+
+        return $items;
+    }
+
+
+    /**
+     * @template  T
+     * @param T $model
+     * @param string $id
+     * @return T
+     */
+    public function findById(string $model, string $id): mixed
+    {
+        $table = $model::TABLE;
+        $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
+        $fields = implode(', ', $model::FIELDS);
+
+        $sql = "SELECT {$fields} FROM {$table} WHERE {$primaryKey} = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindParam(":id", $id, \PDO::PARAM_INT);
+        $statement->execute();
+        $object = $statement->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$object) {
+            return null;
+        }
+
+        $objClass = new $model();
+
+        foreach ($model::FIELDS as $field) {
+
+            $objClassField = $field;
+
+            if (!property_exists($objClass, $field)) {
+                $objClassField = snakeCaseToCamelCase($field);
+            }
+
+            $objClass->$objClassField = $object[$field];
+        }
+
+
+        return $objClass;
+    }
+
+    public function create(string $model, array $data): void
+    {
+        $table = $model::TABLE;
+        $keys = implode(', ', array_keys($data));
+        $values = implode(', :', array_keys($data));
+
+        $sql = "INSERT INTO $table ($keys) VALUES (:$values)";
+        $statement = mysql()->pdo->prepare($sql);
+
+        foreach (array_keys($data) as $key) {
+            $statement->bindParam(":$key", $data[$key]);
+        }
+
+        $statement->execute();
+    }
+
+    public function update(string $model, int|string $id, array $data): void
+    {
+        $table = $model::TABLE;
+        $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
+
+        $keys = array_map(fn($key) => "$key = :$key", array_keys($data));
+        $keys = implode(', ', $keys);
+
+        $sql = "UPDATE $table SET $keys WHERE $primaryKey = :id";
+        $statement = $this->pdo->prepare($sql);
+
+        $statement->bindParam(":id", $id);
+
+        foreach (array_keys($data) as $key) {
+            $statement->bindParam(":$key", $data[$key]);
+        }
+
+        $statement->execute();
+    }
+
+    public function deleteById(string $model, int $id): void
+    {
+        $table = $model::TABLE;
+        $primaryKey = property_exists($model, 'PRIMARY_KEY') ? $model::PRIMARY_KEY : 'id';
+
+        $sql = "DELETE FROM $table WHERE $primaryKey = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindParam(":id", $id);
+        $statement->execute();
     }
 }
