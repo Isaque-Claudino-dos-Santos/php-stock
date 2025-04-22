@@ -8,5 +8,10 @@ spl_autoload_register(function ($class) {
 
     $class = __DIR__ . $class;
 
+    if (!file_exists($class)) {
+        return;
+    }
+
     require_once $class;
+
 });
