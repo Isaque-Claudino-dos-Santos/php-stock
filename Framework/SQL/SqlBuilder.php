@@ -97,7 +97,7 @@ class SqlBuilder
         return $this;
     }
 
-    public function update(array $data): string
+    public function statementUpdate(array $data): string
     {
         $set = [];
 
@@ -114,7 +114,7 @@ class SqlBuilder
         return $sql;
     }
 
-    public function delete(): string
+    public function statementDelete(): string
     {
         $sql = "DELETE FROM {$this->table}";
 
@@ -127,7 +127,7 @@ class SqlBuilder
         return $sql;
     }
 
-    public function create(array $data): string
+    public function statementCreate(array $data): string
     {
         $keys = implode(', ', array_keys($data));
         $values = implode(', ', array_map(fn($value) => "'$value'", array_values($data)));

@@ -1,5 +1,5 @@
 <?php
-/** @var array $paginate */
+/** @var \App\Framework\SQL\SqlPagination $paginate */
 ?>
 
 <!doctype html>
@@ -19,7 +19,7 @@
 
 <?php
 component('table_creation',
-    items: $paginate['items'],
+    items: $paginate->items,
     headers: ['ID', 'Name', 'Creation Date', '', ''],
     lines: [
         'id' => fn($value) => $value,
@@ -28,12 +28,12 @@ component('table_creation',
         function ($item) {
             component('link',
                 text: 'Update',
-                href: "/ecommerces/update/{$item->id}",
+                href: "/ecommerces/update/{$item['id']}",
             );
         },
         function ($item) {
             component('form/root',
-                action: "/ecommerces/{$item->id}",
+                action: "/ecommerces/{$item['id']}",
                 method: 'delete',
                 element: '<button>DELETE</button>'
             );

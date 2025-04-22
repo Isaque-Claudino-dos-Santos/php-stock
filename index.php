@@ -1,7 +1,8 @@
 <?php
 
-use App\Framework\{Router, Response, Request, Mysql, SQL\SqlBuilder};
-use App\Controllers\{ExampleController, ProductController, EcommerceController};
+use App\Framework\{Router, Request};
+use App\Controllers\{ProductController, EcommerceController};
+use App\Models\Product;
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');

@@ -3,12 +3,18 @@
 
 namespace App\Models;
 
-class Ecommerce
+use App\Framework\Model;
+
+class Ecommerce extends Model
 {
-    public static string $table = "ecommerces";
-    public const array FIELDS = ['id', 'name', 'created_at', 'updated_at'];
     public int $id;
     public string $name;
     public string $createdAt;
     public string $updatedAt;
+
+
+    public function table(): string
+    {
+        return 'ecommerces';
+    }
 }

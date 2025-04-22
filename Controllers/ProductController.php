@@ -10,15 +10,12 @@ class ProductController
 {
     public function productsPagination(Request $request): void
     {
-        $paginate = mysql()->paginate(
-            model: Product::class,
-            limit: 30,
-            page: $request->query['page'] ?? 1,
-            orderBy: $request->query['order_by'] ?? 'asc',
-            orderColumn: $request->query['order_column'] ?? 'id',
-        );
+        $paginate = Product::statement()
+            ->orderBy($request->query['order_column'] ?? 'id', $request->query['order_by'] ?? 'asc')
+            ->paginate(page: $request->query['page'] ?? 1);
 
-        $ecommerces = mysql()->all(Ecommerce::class, 'name', 'id');
+
+        $ecommerces = Ecommerce::statement()->all();
 
         response()->sendHtml('views/pages/products/products-pagination.php', compact('paginate', 'ecommerces'));
     }
@@ -38,7 +35,7 @@ class ProductController
     {
         $body = $request->body;
 
-        mysql()->create(Product::class, [
+        Product::statement()->create([
             'name' => $body['name'],
             'description' => $body['description'],
             'price' => $body['price'],
@@ -47,19 +44,21 @@ class ProductController
 
     public function productUpdate(Request $request): void
     {
+        $id = $request->params['id'];
         $body = $request->body;
-        $params = $request->params;
 
-        mysql()->update(Product::class, $params['id'], [
-            'name' => $body['name'],
-            'description' => $body['description'],
-            'price' => $body['price'],
-        ]);
+        Product::statement()
+            ->where('id', $id)
+            ->update([
+                'name' => $body['name'],
+                'description' => $body['description'],
+                'price' => $body['price'],
+            ]);
     }
 
     public function productDelete(Request $request): void
     {
         $id = $request->params['id'];
-        mysql()->deleteById(Product::class, $id);
+        Product::statement()->where('id', $id)->delete();
     }
 }

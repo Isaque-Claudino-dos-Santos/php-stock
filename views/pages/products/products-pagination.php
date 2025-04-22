@@ -1,7 +1,7 @@
 <?php
 
 
-/** @var array $paginate */
+/** @var \App\Framework\SQL\SqlPagination $paginate */
 /** @var array<\App\Models\Ecommerce> $ecommerces */
 
 
@@ -23,21 +23,22 @@
 <main class="container">
     <a href="/products/create">Create a new product +</a>
 
-<!--    TODO: implement filter by e-commerce -->
-<!--    <form method="GET" action="/products">-->
-<!--        --><?php //foreach ($ecommerces as $ecommerce): ?>
-<!--            <label for="ecommerce---><?php //= $ecommerce->id ?><!--">--><?php //= $ecommerce->name ?><!--</label>-->
-<!--            <input type="checkbox" id="ecommerce---><?php //= $ecommerce->id ?><!--" name="ecommerces[]" value="--><?php //= $ecommerce->id ?><!--"/>-->
-<!--        --><?php //endforeach; ?>
-<!---->
-<!--        <button>FIND</button>-->
-<!--    </form>-->
+    <!--    TODO: implement filter by e-commerce -->
+    <!--    <form method="GET" action="/products">-->
+    <!--        --><?php //foreach ($ecommerces as $ecommerce): ?>
+    <!--            <label for="ecommerce---><?php //= $ecommerce->id ?><!--">-->
+    <?php //= $ecommerce->name ?><!--</label>-->
+    <!--            <input type="checkbox" id="ecommerce--->
+    <?php //= $ecommerce->id ?><!--" name="ecommerces[]" value="--><?php //= $ecommerce->id ?><!--"/>-->
+    <!--        --><?php //endforeach; ?>
+    <!---->
+    <!--        <button>FIND</button>-->
+    <!--    </form>-->
 
 
     <?php
-
     component('table_creation',
-        items: $paginate['items'],
+        items: $paginate->items,
         headers: ['ID', 'Name', 'Price', 'Description', 'Creation Date', '', ''],
         lines: [
             'id' => fn($value) => $value,
@@ -48,12 +49,12 @@
             function ($item) {
                 component('link',
                     text: 'Update',
-                    href: "/products/update/{$item->id}",
+                    href: "/products/update/{$item['id']}",
                 );
             },
             function ($item) {
                 component('form/root',
-                    action: "/products/{$item->id}",
+                    action: "/products/{$item['id']}",
                     method: 'delete',
                     element: '<button>DELETE</button>'
                 );

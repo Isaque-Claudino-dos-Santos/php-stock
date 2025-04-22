@@ -63,7 +63,7 @@ if (!function_exists('script')) {
 }
 
 if (!function_exists('component')) {
-    function component(string $file, array|Closure|string ...$data): void
+    function component(string $file, mixed ...$data): void
     {
 
         if (key_exists(0, $data) && is_callable($data[0]) || key_exists(0, $data) && is_string($data[0])) {

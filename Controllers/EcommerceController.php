@@ -9,14 +9,9 @@ class EcommerceController
 {
     public function ecommercePagination(): void
     {
-
-        $paginate = mysql()->paginate(
-            model: Ecommerce::class,
-            limit: 30,
-            page: $request->query['page'] ?? 1,
-            orderBy: $request->query['order_by'] ?? 'asc',
-            orderColumn: $request->query['order_column'] ?? 'id',
-        );
+        $paginate = Ecommerce::statement()
+            ->orderBy($request->query['order_column'] ?? 'id', $request->query['order_by'] ?? 'asc')
+            ->paginate(page: $request->query['page'] ?? 1, limit: $request->query['limit'] ?? 30);
 
         response()->sendHtml('views/pages/ecommerces/ecommerces-pagination.php', compact('paginate'));
     }
@@ -36,7 +31,7 @@ class EcommerceController
     {
         $body = $request->body;
 
-        mysql()->create(Ecommerce::class, [
+        Ecommerce::statement()->create([
             'name' => $body['name'],
         ]);
     }
@@ -44,9 +39,9 @@ class EcommerceController
     public function ecommerceUpdate(Request $request): void
     {
         $body = $request->body;
-        $params = $request->params;
+        $id = $request->params['id'];
 
-        mysql()->update(Ecommerce::class, $params['id'], [
+        Ecommerce::statement()->where('id', $id)->update([
             'name' => $body['name'],
         ]);
     }
@@ -54,6 +49,6 @@ class EcommerceController
     public function ecommerceDelete(Request $request): void
     {
         $id = $request->params['id'];
-        mysql()->deleteById(Ecommerce::class, $id);
+        Ecommerce::statement()->where('id', $id)->delete();
     }
 }
