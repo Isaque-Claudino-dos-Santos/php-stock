@@ -5,7 +5,6 @@ namespace App\Models;
 
 
 use App\Framework\Model;
-use PDO;
 
 class Product extends Model
 {
@@ -25,8 +24,7 @@ class Product extends Model
 
     public function ecommerce(): Ecommerce|null
     {
-        // TODO: implemente belongsTo
-        return null;
+        return self::statement()->belongToOne(Ecommerce::class, $this->ecommerceId);
     }
 
 }
