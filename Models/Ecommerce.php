@@ -17,4 +17,9 @@ class Ecommerce extends Model
     {
         return 'ecommerces';
     }
+
+    public function products(): array
+    {
+        return self::statement()->hasMany(Product::class, 'ecommerce_id', $this->id);
+    }
 }

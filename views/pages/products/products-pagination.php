@@ -7,8 +7,8 @@
 
 $ecommercesOptions = array_map(function ($ecommerce) {
     return [
-        'value' => $ecommerce['id'],
-        'text' => "{$ecommerce['id']} - {$ecommerce['name']}"
+        'value' => $ecommerce->id,
+        'text' => "{$ecommerce->id} - {$ecommerce->name}"
     ];
 }, $ecommerces);
 
