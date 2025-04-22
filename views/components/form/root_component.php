@@ -8,7 +8,10 @@ $method = strtoupper($method);
 ?>
 
 <form method="<?= $method === 'GET' ? 'GET' : 'POST' ?>" action="<?= $action ?>" class="form">
-    <input type="hidden" name="_method" value="<?= $method ?>"/>
+
+    <?php if ($method != "GET"): ?>
+        <input type="hidden" name="_method" value="<?= $method ?>"/>
+    <?php endif; ?>
 
     <?php
     if (is_callable($element)) {

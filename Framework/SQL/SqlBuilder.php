@@ -60,13 +60,19 @@ class SqlBuilder
         return $this;
     }
 
+    public function whereIn(string $key, array $values): self
+    {
+        $this->wheres[] = new WhereOperation($key, $values, 'IN');
+        return $this;
+    }
+
     private function buildWheres(): string
     {
         if (empty($this->wheres)) {
             return '';
         }
 
-        $sql = ' WHERE';
+        $sql = '';
 
         foreach ($this->wheres as $key => $where) {
             if ($key > 0) {
@@ -76,10 +82,15 @@ class SqlBuilder
             $sql .= " {$where->build()}";
         }
 
-        return $sql;
+        if (empty(trim($sql))) {
+            return '';
+        }
+
+        return " WHERE$sql";
     }
 
-    public function limit(int $limit): self
+    public
+    function limit(int $limit): self
     {
         $this->limit = $limit;
         return $this;
@@ -93,7 +104,7 @@ class SqlBuilder
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
-        $this->orders[] = [$column, $direction];
+        $this->orders[] = [$column, strtoupper($direction)];
         return $this;
     }
 

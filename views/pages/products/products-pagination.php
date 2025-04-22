@@ -5,6 +5,13 @@
 /** @var array<\App\Models\Ecommerce> $ecommerces */
 
 
+$ecommercesOptions = array_map(function ($ecommerce) {
+    return [
+        'value' => $ecommerce['id'],
+        'text' => "{$ecommerce['id']} - {$ecommerce['name']}"
+    ];
+}, $ecommerces);
+
 ?>
 
 <!DOCTYPE html>
@@ -20,21 +27,26 @@
     <a href="/"><</a>
 </header>
 
+
 <main class="container">
     <a href="/products/create">Create a new product +</a>
 
-    <!--    TODO: implement filter by e-commerce -->
-    <!--    <form method="GET" action="/products">-->
-    <!--        --><?php //foreach ($ecommerces as $ecommerce): ?>
-    <!--            <label for="ecommerce---><?php //= $ecommerce->id ?><!--">-->
-    <?php //= $ecommerce->name ?><!--</label>-->
-    <!--            <input type="checkbox" id="ecommerce--->
-    <?php //= $ecommerce->id ?><!--" name="ecommerces[]" value="--><?php //= $ecommerce->id ?><!--"/>-->
-    <!--        --><?php //endforeach; ?>
-    <!---->
-    <!--        <button>FIND</button>-->
-    <!--    </form>-->
+    <hr/>
 
+    <?php
+
+    component('form/root',
+        method: "GET",
+        action: '/products',
+        element: function () use ($ecommercesOptions) {
+            component("form/select", id: 'ecommerces', label: 'E-commerces', mult: true, options: $ecommercesOptions);
+            // TODO: <input type="hidden" name="ecommerces" value="[1, 2, 3, 4]" /> implemente new form select
+
+            component("form/button", 'filter');
+        });
+    ?>
+
+    <hr/>
 
     <?php
     component('table_creation',

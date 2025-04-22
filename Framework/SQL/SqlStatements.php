@@ -62,8 +62,7 @@ class SqlStatements extends SqlBuilder
 
         $sql = $this->limit($limit)->offset($offset)->query();
 
-        $data = mysql()->fetch($sql);
-
+        $data = mysql()->fetch($sql) ?? [];
         $totalPages = intval(ceil($this->count() / $limit));
 
         return new SqlPagination(

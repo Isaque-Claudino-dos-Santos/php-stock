@@ -5,15 +5,18 @@ namespace App\Controllers;
 use App\Framework\Request;
 use App\Models\Ecommerce;
 use App\Models\Product;
+use App\Request\ProductsPaginationFilters;
 
 class ProductController
 {
     public function productsPagination(Request $request): void
     {
-        $paginate = Product::statement()
-            ->orderBy($request->query['order_column'] ?? 'id', $request->query['order_by'] ?? 'asc')
-            ->paginate(page: $request->query['page'] ?? 1);
+        $filters = ProductsPaginationFilters::fromArray($request->query);
 
+        $paginate = Product::statement()
+            ->whereIn('ecommerce_id', $filters->ecommerces)
+            ->orderBy($filters->orderByColumn, $filters->orderBy)
+            ->paginate(page: $filters->page, limit: $filters->limit);
 
         $ecommerces = Ecommerce::statement()->all();
 
@@ -22,7 +25,9 @@ class ProductController
 
     public function productCreateForm(Request $request): void
     {
-        response()->sendHtml('views/pages/products/products-create-form.php');
+        $ecommerces = Ecommerce::statement()->all();
+
+        response()->sendHtml('views/pages/products/products-create-form.php', compact('ecommerces'));
     }
 
     public function productUpdateForm(Request $request): void
@@ -39,6 +44,7 @@ class ProductController
             'name' => $body['name'],
             'description' => $body['description'],
             'price' => $body['price'],
+            'ecommerce_id' => $body['ecommerce'],
         ]);
     }
 
