@@ -27,7 +27,16 @@
                 ['text' => 'Lista de Produtos', 'href' => '/products'],
                 ['text' => 'Criar Produto', 'href' => '/products/create'],
             ]
-        )
+        );
+
+        component(
+            'dropdown',
+            label: 'E-commerce',
+            items: [
+                ['text' => 'Lista de E-commerce', 'href' => '/ecommerces'],
+                ['text' => 'Criar E-commerce', 'href' => '/ecommerces/create'],
+            ]
+        );
         ?>
     </nav>
 

@@ -40,3 +40,32 @@
     align-self: center;
     cursor: pointer;
 }
+
+/* RESET SELECT ELEMENT*/
+
+
+.form_select {
+    border: 1px solid #efefef;
+    color: #efefef;
+    background: transparent;
+
+
+    padding: .5em;
+}
+
+.form_select_option {
+    background: #212121;
+    color: #efefef;
+
+    padding: .5em;
+    transition: 0.4s;
+}
+
+.form_select_option .form_select_content {
+    width: 100%;
+    border: 1px solid #efefef;
+
+    padding: .5em;
+    border-radius: .24em;
+}
+

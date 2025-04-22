@@ -63,7 +63,7 @@ if (!function_exists('script')) {
 }
 
 if (!function_exists('component')) {
-    function component(string $file, array|Closure|string ...$data): void
+    function component(string $file, mixed ...$data): void
     {
 
         if (key_exists(0, $data) && is_callable($data[0]) || key_exists(0, $data) && is_string($data[0])) {
@@ -77,6 +77,20 @@ if (!function_exists('component')) {
         require __ROOT__ . "/views/components/$file" . '_component.php';
     }
 }
+if (!function_exists('snakeCaseToCamelCase')) {
+    function snakeCaseToCamelCase(string $value): string
+    {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $value))));
+    }
+}
+
+if (!function_exists('camelCaseToSnakeCase')) {
+    function camelCaseToSnakeCase(string $value): string
+    {
+        return ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $value)), '_');
+    }
+}
+
 
 
 

@@ -6,6 +6,11 @@ body {
     color: #efefef;
 }
 
+hr {
+    border: 1px solid #efefef;
+    margin: 2em;
+}
+
 button {
     background: transparent;
     border: none;

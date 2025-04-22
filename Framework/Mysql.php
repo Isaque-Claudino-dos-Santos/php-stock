@@ -3,6 +3,8 @@
 
 namespace App\Framework;
 
+use App\Framework\SQL\SqlBuilder;
+
 class Mysql
 {
     private static Mysql $instance;
@@ -51,9 +53,33 @@ class Mysql
             $fileDir = $migrationsDir . "/" . $fileName;
             $file = fopen($fileDir, "r");
             $fileSize = filesize($fileDir);
+
+            if ($fileSize <= 0) {
+                fclose($file);
+                continue;
+            }
+
             $fileContent = fread($file, $fileSize);
             $this->pdo->exec($fileContent);
             fclose($file);
         }
+    }
+
+    public function fetch(string $sql): array|null
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    public function exec(string $sql): void
+    {
+        $this->pdo->exec($sql);
     }
 }

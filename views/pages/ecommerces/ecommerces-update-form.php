@@ -21,7 +21,7 @@
         <?php
         component('form/root',
             method: 'put',
-            action: "/products/$id",
+            action: "/ecommerces/$id",
             element: function () {
                 component('form/input',
                     id: 'name',
@@ -29,23 +29,7 @@
                     required: true
                 );
 
-                component('form/input',
-                    id: 'description',
-                    label: 'Description',
-                );
-
-                component('form/input',
-                    id: 'price',
-                    label: 'Price',
-                    required: true,
-                );
-
-                component('form/input',
-                    id: 'quantity',
-                    label: 'Quantity',
-                );
-
-                component('form/button', 'Update Product');
+                component('form/button', 'Update E-commerce');
             });
         ?>
     </div>

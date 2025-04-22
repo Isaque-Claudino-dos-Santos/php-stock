@@ -1,7 +1,7 @@
 <?php
 
-use App\Framework\{Router, Response, Request, Mysql};
-use App\Controllers\{ExampleController, ProductController};
+use App\Framework\{Router, Request};
+use App\Controllers\{ProductController, EcommerceController};
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -11,7 +11,6 @@ require __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/autoload.php';
 require __DIR__ . '/helpers.php';
 
-//Mysql::getInstance()->migrate('Database/migrations');
 
 $router = new Router();
 
@@ -39,6 +38,14 @@ $router->get('/products/update/{id}', [ProductController::class, 'productUpdateF
 $router->post('/products', [ProductController::class, 'productCreate']);
 $router->put('/products/{id}', [ProductController::class, 'productUpdate']);
 $router->delete('/products/{id}', [ProductController::class, 'productDelete']);
+
+
+$router->get('/ecommerces', [EcommerceController::class, 'ecommercePagination']);
+$router->get('/ecommerces/create', [EcommerceController::class, 'ecommerceCreateForm']);
+$router->get('/ecommerces/update/{id}', [EcommerceController::class, 'ecommerceUpdateForm']);
+$router->post('/ecommerces', [EcommerceController::class, 'ecommerceCreate']);
+$router->put('/ecommerces/{id}', [EcommerceController::class, 'ecommerceUpdate']);
+$router->delete('/ecommerces/{id}', [EcommerceController::class, 'ecommerceDelete']);
 
 $router->boot();
 

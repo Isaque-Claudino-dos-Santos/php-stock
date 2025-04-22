@@ -1,3 +1,15 @@
+<?php
+/** @var array $ecommerces */
+
+$ecommercesOptions = array_map(function ($ecommerce) {
+    return [
+        'value' => $ecommerce['id'],
+        'text' => $ecommerce['name']
+    ];
+}, $ecommerces);
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -17,7 +29,7 @@
         component('form/root',
             method: 'post',
             action: '/products',
-            element: function () {
+            element: function () use ($ecommerces, $ecommercesOptions) {
                 component('form/input',
                     id: 'name',
                     label: 'Nome',
@@ -35,10 +47,7 @@
                     required: true,
                 );
 
-                component('form/input',
-                    id: 'quantity',
-                    label: 'Quantity',
-                );
+                component('form/select', id: 'ecommerce', label: 'E-commerce', options: $ecommercesOptions);
 
                 component('form/button', 'Create Product');
             });

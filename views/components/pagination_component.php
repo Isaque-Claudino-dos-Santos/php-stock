@@ -1,34 +1,34 @@
 <?php
 
-/** @var array $paginate */
+/** @var \App\Framework\SQL\SqlPagination $paginate */
 
 ?>
 
 <div class="flex">
-    <?php if ($paginate['has_previous_page']): ?>
+    <?php if ($paginate->hasPreviousPage): ?>
         <button id="pagination-previous">
             <?php component('icons/previous', class: 'pagination_button-previous'); ?>
         </button>
     <?php endif; ?>
 
     <label>
-        <input type="text" class="pagination_page" value="<?= $paginate['page'] ?>" id="pagination_current_page"/>
+        <input type="text" class="pagination_page" value="<?= $paginate->page ?>" id="pagination_current_page"/>
     </label>
 
-    <?php if ($paginate['has_next_page']): ?>
+    <?php if ($paginate->hasNextPage): ?>
         <button id="pagination-next">
             <?php component('icons/next', class: 'pagination_button-next'); ?>
         </button>
     <?php endif; ?>
 </div>
 
-<p>pages: <?= $paginate['total_pages'] ?></p>
+<p>pages: <?= $paginate->totalPages ?></p>
 
 
 <script>
     (() => {
         const url = new URL(location.href)
-        let page = Number("<?= $paginate['page'] ?>")
+        let page = Number("<?= $paginate->page ?>")
 
 
         document.querySelector('#pagination_current_page')
@@ -47,7 +47,7 @@
 
         document.querySelector('#pagination-previous')
             ?.addEventListener('click', () => {
-                const hasPreviousPage = Boolean("<?= $paginate['has_previous_page'] ?>");
+                const hasPreviousPage = Boolean("<?= $paginate->hasPreviousPage ?>");
 
                 if (!hasPreviousPage) return;
 
@@ -60,7 +60,7 @@
 
         document.querySelector('#pagination-next')
             ?.addEventListener('click', () => {
-                const hasNextPage = Boolean("<?= $paginate['has_next_page'] ?>");
+                const hasNextPage = Boolean("<?= $paginate->hasNextPage ?>");
 
                 if (!hasNextPage) return;
 
